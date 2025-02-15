@@ -8,6 +8,11 @@
 
 return {
   -- NOTE: Yes, you can install new plugins here!
+  {
+    'microsoft/vscode-js-debug',
+    opt = true,
+    build = 'npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out',
+  },
   'mfussenegger/nvim-dap',
   -- NOTE: And you can specify dependencies as well
   dependencies = {
@@ -22,6 +27,8 @@ return {
     'jay-babu/mason-nvim-dap.nvim',
 
     -- Add your own debuggers here
+    'julianolf/nvim-dap-lldb',
+    'mxsdev/nvim-dap-vscode-js',
     'leoluz/nvim-dap-go',
   },
   keys = {
@@ -80,6 +87,9 @@ return {
   config = function()
     local dap = require 'dap'
     local dapui = require 'dapui'
+
+    -- load node config
+    require 'kickstart.plugins.node'
 
     require('mason-nvim-dap').setup {
       -- Makes a best effort to setup the various debuggers with
