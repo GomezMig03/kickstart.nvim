@@ -30,6 +30,7 @@ return {
     'julianolf/nvim-dap-lldb',
     'mxsdev/nvim-dap-vscode-js',
     'leoluz/nvim-dap-go',
+    'simrat39/rust-tools.nvim',
   },
   keys = {
     -- Basic debugging keymaps, feel free to change to your liking!
@@ -145,6 +146,19 @@ return {
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
+
+    local rt = require 'rust-tools'
+
+    rt.setup {
+      server = {
+        on_attach = function(_, bufnr)
+          -- Hover actions
+          vim.keymap.set('n', '<C-space>', rt.hover_actions.hover_actions, { buffer = bufnr })
+          -- Code action groups
+          vim.keymap.set('n', '<Leader>a', rt.code_action_group.code_action_group, { buffer = bufnr })
+        end,
+      },
+    }
 
     -- Install golang specific config
     require('dap-go').setup {
