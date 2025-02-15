@@ -13,6 +13,11 @@ return {
     opt = true,
     build = 'npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out',
   },
+  {
+    'mrcjkb/rustaceanvim',
+    version = '^5',
+    lazy = false,
+  },
   'mfussenegger/nvim-dap',
   -- NOTE: And you can specify dependencies as well
   dependencies = {
@@ -30,7 +35,6 @@ return {
     'julianolf/nvim-dap-lldb',
     'mxsdev/nvim-dap-vscode-js',
     'leoluz/nvim-dap-go',
-    'simrat39/rust-tools.nvim',
   },
   keys = {
     -- Basic debugging keymaps, feel free to change to your liking!
@@ -106,6 +110,7 @@ return {
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'codelldb',
       },
     }
 
@@ -150,14 +155,19 @@ return {
     local rt = require 'rust-tools'
 
     rt.setup {
-      server = {
-        on_attach = function(_, bufnr)
-          -- Hover actions
-          vim.keymap.set('n', '<C-space>', rt.hover_actions.hover_actions, { buffer = bufnr })
-          -- Code action groups
-          vim.keymap.set('n', '<Leader>a', rt.code_action_group.code_action_group, { buffer = bufnr })
-        end,
-      },
+      on_attach = function(_, bufnr)
+        -- Hover actions
+        vim.keymap.set('n', '<leader>d', rt.hover_actions.hover_actions, {
+          buffer = bufnr,
+          desc = 'Hover to [d]ebug',
+        })
+
+        -- Code action groups
+        vim.keymap.set('n', '<leader>a', rt.code_action_group.code_action_group, {
+          buffer = bufnr,
+          desc = 'Code [a]ctions',
+        })
+      end,
     }
 
     -- Install golang specific config
